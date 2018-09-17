@@ -1,0 +1,19 @@
+{
+  "name": "piscine-2018-hp",
+  "version": "1.0.0",
+  "description": "Dashboard on houses points for Harry Potter themed Pool for Epitech",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Radiateurs/Piscine-2018-HP.git"
+  },
+  "author": "Pierre-Marie Danieau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Radiateurs/Piscine-2018-HP/issues"
+  },
+  "homepage": "https://github.com/Radiateurs/Piscine-2018-HP#readme"
+}
