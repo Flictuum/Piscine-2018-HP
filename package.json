@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/Radiateurs/Piscine-2018-HP/issues"
   },
-  "homepage": "https://github.com/Radiateurs/Piscine-2018-HP#readme"
+  "homepage": "https://github.com/Radiateurs/Piscine-2018-HP#readme",
+  "dependencies": {
+    "knex": "^0.15.2",
+    "passport": "^0.4.0",
+    "sqlite3": "^4.0.2"
+  }
 }
