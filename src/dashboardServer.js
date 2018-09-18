@@ -47,7 +47,8 @@ DashboardServer.prototype.start = function () {
 
             _this.app.use('/', _this.requestMiddleware.verifySessionAndPrivilege);
 
-            _this.setupUsers()
+            _this.setupUsers();
+            _this.setupHouses();
 
             resolve(_this.app);
             return true;
@@ -77,16 +78,23 @@ DashboardServer.prototype.setupUsers = function () {
     this.app.route('/users/logout').post(this.userCtrl.logoutUser);
 
     // Interacts with the user in the DB
-    // (POST : create / DELETE : delete / PUT : modify)
+    // (POST : create / DELETE : delete )
     // Real path is /users
     this.app.route('/users')
         .get(this.userCtrl.getUser)
         .post(this.userCtrl.createUser)
         .delete(this.userCtrl.eraseUser);
-}
+};
 
 DashboardServer.prototype.setupHouses = function () {
+    const HouseController = require('./controllers/houseController');
+    this.houseCtrl = new HouseController();
 
-}
+    // Handle the house Getter / Creator / Deletor
+    this.app.route('/house')
+        .get(this.houseCtrl.getHouse)
+        .post(this.houseCtrl.createHouse)
+        .delete(this.houseCtrl.deleteHouse);
+};
 
 module.exports = DashboardServer;
