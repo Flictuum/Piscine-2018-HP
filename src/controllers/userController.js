@@ -51,10 +51,10 @@ UserController.prototype.deserializeUser = function (serializedUser, done) {
 
 UserController.prototype.getUser = function (req, res) {
     let whereObj = {}
-    if (req.body.hasOwnProperty('id'))
-        whereObj['id'] = req.body.id;
-    if (req.body.hasOwnProperty('username'))
-        whereObj['username'] = `%${req.body.username}%`;
+    if (req.query.hasOwnProperty('id'))
+        whereObj['id'] = req.query.id;
+    if (req.query.hasOwnProperty('username'))
+        whereObj['username'] = `%${req.query.username}%`;
     getEntry('USERS', whereObj, '*').then((result) => {
         if (result !== null && result.length >= 0)
             for (let i = 0; i < result.length; i++) {
