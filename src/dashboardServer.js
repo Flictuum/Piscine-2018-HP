@@ -14,6 +14,7 @@ function DashboardServer(config) {
     this.start = DashboardServer.prototype.start.bind(this);
     this.setupUsers = DashboardServer.prototype.setupUsers.bind(this);
     this.setupHouses = DashboardServer.prototype.setupHouses.bind(this);
+    this.setupPoints = DashboardServer.prototype.setupPoints.bind(this);
 
     this.requestMiddleware = require('./utils/middlewares');
 
@@ -49,6 +50,7 @@ DashboardServer.prototype.start = function () {
 
             _this.setupUsers();
             _this.setupHouses();
+            _this.setupPoints();
 
             resolve(_this.app);
             return true;
@@ -96,5 +98,17 @@ DashboardServer.prototype.setupHouses = function () {
         .post(this.houseCtrl.createHouse)
         .delete(this.houseCtrl.deleteHouse);
 };
+
+DashboardServer.prototype.setupPoints = function () {
+    const PointsController = require('./controllers/pointController');
+    this.pointCtrl = new PointsController();
+
+    // Handle the point Getter / Creator / Deletor
+    this.app.route('/point')
+        .get(this.pointCtrl.getPoints)
+        .post(this.pointCtrl.createPoints)
+        .delete(this.pointCtrl.deletePoints);
+};
+
 
 module.exports = DashboardServer;
