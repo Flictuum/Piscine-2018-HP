@@ -5,6 +5,7 @@ const body_parser = require('body-parser');
 const passport = require('passport');
 const { migrate, erase } = require('./utils/db-handler')
 
+
 function DashboardServer(config) {
     this.config = config;
     this.app = express();
@@ -13,6 +14,8 @@ function DashboardServer(config) {
     this.start = DashboardServer.prototype.start.bind(this);
     this.setupUsers = DashboardServer.prototype.setupUsers.bind(this);
     this.setupHouses = DashboardServer.prototype.setupHouses.bind(this);
+
+    this.requestMiddleware = require('./utils/middlewares');
 
     this.app.set('x-powered-by', false);
 }
@@ -41,6 +44,8 @@ DashboardServer.prototype.start = function () {
                 extended: true
             }));
             _this.app.use(body_parser.json());
+
+            _this.app.use('/', _this.requestMiddleware.verifySessionAndPrivilege);
 
             _this.setupUsers()
 

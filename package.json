@@ -4,7 +4,10 @@
   "description": "Dashboard on houses points for Harry Potter themed Pool for Epitech",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "migrate": "knex migrate:latest",
+    "seed": "knex seed:run",
+    "test": "jest --colors --verbose --detectOpenHandles --runInBand",
+    "start": "node ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +20,11 @@
   },
   "homepage": "https://github.com/Radiateurs/Piscine-2018-HP#readme",
   "dependencies": {
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
     "knex": "^0.15.2",
+    "nodeify": "^1.0.1",
+    "npm": "^6.4.1",
     "passport": "^0.4.0",
     "sqlite3": "^4.0.2"
   }

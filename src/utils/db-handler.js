@@ -1,5 +1,6 @@
 const knexconfig = require('../../knexfile');
 const knex = require('knex')(knexconfig);
+const fs = require('fs');
 
 const database = new Proxy(knex, {
     get: (target, name) => {

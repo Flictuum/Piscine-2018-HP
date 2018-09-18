@@ -3,10 +3,9 @@ const ErrorHelper = require('../utils/error-utils');
 const formatToJSON = require('../utils/format-response');
 const message = require('../utils/message/error');
 const { getEntry, createEntry, eraseEntry } = require('../utils/db-handler');
+const { hash, generateAndHash } = require('../utils/crypto-gen');
 
 function UserController() {
-    this.user = new userCore();
-
     this.serializeUser = UserController.prototype.serializeUser.bind(this);
     this.deserializeUser = UserController.prototype.deserializeUser.bind(this);
     this.getUser = UserController.prototype.getUser.bind(this);
@@ -41,7 +40,7 @@ UserController.prototype.serializeUser = function (deserializedUser, done) {
  * @param done Callback to pass the deserialized user result to
  */
 UserController.prototype.deserializeUser = function (serializedUser, done) {
-    nodeify(this.user.getUserByID(serializedUser.id).then((user) => {
+    nodeify(getEntry('USERS', {id: serializedUser.id}, '*').then((user) => {
         if (user.length > 0)
             return [null, user[0]];
         return [`Failed to retreive the user for ID ${serializedUser.id}`, null];
@@ -55,19 +54,25 @@ UserController.prototype.getUser = function (req, res) {
     if (req.body.hasOwnProperty('id'))
         whereObj['id'] = req.body.id;
     if (req.body.hasOwnProperty('username'))
-        whereObj['username'] = req.body.username;
-    getEntry('USERS', whereObj).then((result) => {
+        whereObj['username'] = `%${req.body.username}%`;
+    getEntry('USERS', whereObj, '*').then((result) => {
+        if (result !== null && result.length >= 0)
+            for (let i = 0; i < result.length; i++) {
+                delete result[i].pw;
+                delete result[i].iteration;
+                delete result[i].salt;
+            }
         res.status(200).json(formatToJSON(result));
         return true;
-    })
+    });
 };
 
 UserController.prototype.createUser = function (req, res) {
-    if (!req.body.hasOwnProperty('pw') || !req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('realname')) {
+    if (req.body === undefined || !req.body.hasOwnProperty('pw') || !req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('realname')) {
         res.status(400).json(ErrorHelper(message.Request.MISSINGARGUMENTS));
         return;
     }
-    if (typeof req.body.pw !== 'string' || typeof req.body.username !== 'string' || typeof req.body.isAdmin !== 'number' || typeof req.body.realname !== 'string') {
+    if (typeof req.body.pw !== 'string' || typeof req.body.username !== 'string' || typeof req.body.realname !== 'string') {
         res.status(400).json(ErrorHelper(message.Request.WRONGARGUMENTS));
         return;
     }
@@ -78,7 +83,7 @@ UserController.prototype.createUser = function (req, res) {
     entryObj.pw = hashContainer.hashed;
     entryObj.salt = hashContainer.salt;
     entryObj.iterations = hashContainer.iteration;
-    this.user.createUser(req.user, req.body).then((result) => {
+    createEntry('USERS', entryObj).then((result) => {
         res.status(200).json(formatToJSON(result));
         return true;
     }).catch((error) => {
@@ -89,7 +94,7 @@ UserController.prototype.createUser = function (req, res) {
 
 UserController.prototype.eraseUser = function (req, res) {
     if (req.body.hasOwnProperty('id') && typeof req.body.id === 'number') {
-        eraseEntry('USERS', {id: req.body.id}).then((result) => {
+        eraseEntry('USERS', { id: req.body.id }).then((result) => {
             res.status(200).json(formatToJSON(result));
             return true;
         }).catch((error) => {
@@ -110,20 +115,37 @@ UserController.prototype.loginUser = function (req, res) {
         res.status(400).json(ErrorHelper(message.Request.MISSINGARGUMENTS));
         return;
     }
-    this.user.loginUser(req.body).then((result) => {
-        req.login(result, (err) => {
-            if (err) {
-                res.status(400).send(ErrorHelper('Failed to login', err));
+    getEntry('USERS', { username: req.body.username }, { pw: 'pw', id: 'id', username: 'username', salt: 'salt', iteration: 'iterations' }).then((result) => {
+        if (result.length <= 0) {
+            res.status(404).json(ErrorHelper(message.Users.NOTFOUND));
+            return false;
+        }
+        try {
+            let crypted = hash(req.body.pw, result[0].salt, result[0].iteration);
+            if (crypted !== result[0].pw) {
+                res.status(400).json(ErrorHelper(message.Users.BADPASSWORD));
                 return false;
             }
-            delete result.pw;
-            delete result.salt;
-            delete result.iteration;
-            res.status(200).json({ status: 'OK', message: 'Successfully logged in', account: result });
-        });
-        return true;
+            else {
+                let copy = Object.assign(result[0]);
+                req.login(copy, (err) => {
+                    if (err) {
+                        res.status(400).json(ErrorHelper('Failed to login', err));
+                        return false;
+                    }
+                });
+                delete result[0].pw;
+                delete result[0].salt;
+                delete result[0].iteration;
+                res.status(200).json({ status: 'OK', message: 'Successfully logged in', account: result });
+                return true;
+            }
+        } catch (err) {
+            res.status(500).json(ErrorHelper(message.System.HASHING_FAILED, err));
+            return false;
+        }
     }).catch((error) => {
-        res.status(400).json(ErrorHelper(error));
+        res.status(400).json(ErrorHelper(message.Database.GET_FAIL, error));
         return false;
     });
 };
