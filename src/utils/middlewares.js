@@ -5,7 +5,7 @@ class RequestMiddleware {
         let user = req.user !== undefined ? req.user.id : null;
         if (user !== null) {
             next();
-        } else if (req.url === '/users/login' || req.url === '/whoami') {
+        } else if (req.method === 'GET' || req.url === '/users/login' || req.url === '/whoami') {
             next();
         } else {
             res.status(400).json({ status: 'error', message: 'Please login first' });
