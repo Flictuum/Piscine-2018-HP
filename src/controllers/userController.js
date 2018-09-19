@@ -56,10 +56,10 @@ UserController.prototype.getUser = function (req, res) {
     if (req.query.hasOwnProperty('username'))
         whereObj['username'] = `%${req.query.username}%`;
     getEntry('USERS', whereObj, '*').then((result) => {
-        if (result !== null && result.length >= 0)
+        if (result !== null && result.length > 0)
             for (let i = 0; i < result.length; i++) {
                 delete result[i].pw;
-                delete result[i].iteration;
+                delete result[i].iterations;
                 delete result[i].salt;
             }
         res.status(200).json(formatToJSON(result));
