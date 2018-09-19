@@ -12,15 +12,21 @@
 					"name": "Get House(s)",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "",
+								"value": ""
+							}
+						],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:3000/house",
+							"raw": "http://api.epi-potter.ovh/house",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"api",
+								"epi-potter",
+								"ovh"
 							],
-							"port": "3000",
 							"path": [
 								"house"
 							]
@@ -32,15 +38,24 @@
 					"name": "Create House",
 					"request": {
 						"method": "POST",
-						"header": [],
-						"body": {},
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Drumstrang\",\n\t\"image\": \"https://vignette.wikia.nocookie.net/harrypotter/images/f/f3/DurmstrangCrest.png/revision/latest?cb=20160112161151\",\n\t\"referent\": 1\n}"
+						},
 						"url": {
-							"raw": "http://localhost:3000/house",
+							"raw": "http://api.epi-potter.ovh/house",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"api",
+								"epi-potter",
+								"ovh"
 							],
-							"port": "3000",
 							"path": [
 								"house"
 							]
@@ -52,15 +67,24 @@
 					"name": "Erase House",
 					"request": {
 						"method": "DELETE",
-						"header": [],
-						"body": {},
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": 5\n}"
+						},
 						"url": {
-							"raw": "http://localhost:3000/house",
+							"raw": "http://api.epi-potter.ovh/house",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"api",
+								"epi-potter",
+								"ovh"
 							],
-							"port": "3000",
 							"path": [
 								"house"
 							]
@@ -88,12 +112,13 @@
 							"raw": "{\n\t\"username\": \"admin\",\n\t\"pw\": \"BFR5pa\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3000/users/login",
+							"raw": "http://api.epi-potter.ovh/users/login",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"api",
+								"epi-potter",
+								"ovh"
 							],
-							"port": "3000",
 							"path": [
 								"users",
 								"login"
@@ -109,12 +134,13 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:3000/users/logout",
+							"raw": "http://api.epi-potter.ovh/users/logout",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"api",
+								"epi-potter",
+								"ovh"
 							],
-							"port": "3000",
 							"path": [
 								"users",
 								"logout"
@@ -130,12 +156,13 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:3000/users",
+							"raw": "http://api.epi-potter.ovh/users",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"api",
+								"epi-potter",
+								"ovh"
 							],
-							"port": "3000",
 							"path": [
 								"users"
 							]
@@ -158,12 +185,13 @@
 							"raw": "{\n\t\"username\": \"Test\",\n\t\"realname\": \"Testeur User\",\n\t\"pw\": \"test\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3000/users",
+							"raw": "http://api.epi-potter.ovh/users",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"api",
+								"epi-potter",
+								"ovh"
 							],
-							"port": "3000",
 							"path": [
 								"users"
 							]
@@ -186,12 +214,13 @@
 							"raw": "{\n\t\"id\":2\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3000/users",
+							"raw": "http://api.epi-potter.ovh/users",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"api",
+								"epi-potter",
+								"ovh"
 							],
-							"port": "3000",
 							"path": [
 								"users"
 							]
@@ -206,14 +235,99 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:3000/whoami",
+							"raw": "http://api.epi-potter.ovh/whoami",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"api",
+								"epi-potter",
+								"ovh"
 							],
-							"port": "3000",
 							"path": [
 								"whoami"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Points",
+			"item": [
+				{
+					"name": "Get Point(s)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://api.epi-potter.ovh/point",
+							"protocol": "http",
+							"host": [
+								"api",
+								"epi-potter",
+								"ovh"
+							],
+							"path": [
+								"point"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Points",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"house\": 1,\n\t\"user\": 1,\n\t\"points\": 10,\n\t\"title\": \"Created a seg fault by doing a multiplication on bc\",\n\t\"comment\": \"Somehow manage to have a seg fault error by multiplying two numbers\"\n}"
+						},
+						"url": {
+							"raw": "http://api.epi-potter.ovh/point",
+							"protocol": "http",
+							"host": [
+								"api",
+								"epi-potter",
+								"ovh"
+							],
+							"path": [
+								"point"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete points",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": 1\n}"
+						},
+						"url": {
+							"raw": "http://api.epi-potter.ovh/point",
+							"protocol": "http",
+							"host": [
+								"api",
+								"epi-potter",
+								"ovh"
+							],
+							"path": [
+								"point"
 							]
 						}
 					},
