@@ -15,6 +15,7 @@ function DashboardServer(config) {
     this.setupUsers = DashboardServer.prototype.setupUsers.bind(this);
     this.setupHouses = DashboardServer.prototype.setupHouses.bind(this);
     this.setupPoints = DashboardServer.prototype.setupPoints.bind(this);
+    this.setupCities = DashboardServer.prototype.setupCities.bind(this);
 
     this.requestMiddleware = require('./utils/middlewares');
 
@@ -48,6 +49,7 @@ DashboardServer.prototype.start = function () {
 
             _this.app.use('/', _this.requestMiddleware.verifySessionAndPrivilege);
 
+            _this.setupCities();
             _this.setupUsers();
             _this.setupHouses();
             _this.setupPoints();
@@ -88,12 +90,23 @@ DashboardServer.prototype.setupUsers = function () {
         .delete(this.userCtrl.eraseUser);
 };
 
+DashboardServer.prototype.setupCities = function () {
+    const cityController = require('./controllers/cityController');
+    this.cityCtrl = new CityController();
+
+    // Handle the house Getter / Creator / Deletor
+    this.app.route('/:city')
+        .get(this.cityCtrl.getCity)
+        .post(this.cityCtrl.createCity)
+        .delete(this.cityCtrl.deleteCity);
+};
+
 DashboardServer.prototype.setupHouses = function () {
     const HouseController = require('./controllers/houseController');
     this.houseCtrl = new HouseController();
 
     // Handle the house Getter / Creator / Deletor
-    this.app.route('/house')
+    this.app.route('/:city/house')
         .get(this.houseCtrl.getHouse)
         .post(this.houseCtrl.createHouse)
         .delete(this.houseCtrl.deleteHouse);
@@ -104,7 +117,7 @@ DashboardServer.prototype.setupPoints = function () {
     this.pointCtrl = new PointsController();
 
     // Handle the point Getter / Creator / Deletor
-    this.app.route('/point')
+    this.app.route('/:city/point')
         .get(this.pointCtrl.getPoints)
         .post(this.pointCtrl.createPoints)
         .delete(this.pointCtrl.deletePoints);
